@@ -1,0 +1,64 @@
+{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\froman\fcharset0 Times New Roman;}{\f1\fswiss\fcharset0 Courier New;}{\f2\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green0\blue255;}
+{\*\generator Riched20 10.0.14393}\viewkind4\uc1 
+\pard\keepn\sb100\sa100\kerning36\b\f0\fs48\lang1033 Background for Lecture 4, "Spark RDDs, Data Frames, SQL"\par
+
+\pard\sb100\sa100\kerning0\b0\fs24 I'm new to all of this. The Hadoop/Spark ecosystem seems to be huge.\par
+I tried to pull in bit of background for others who, like me, may need more context.\par
+== RDD, Map, Filter: \line Lecture slides 1 - 47.\par
+{{\field{\*\fldinst{HYPERLINK https://spark.apache.org/docs/1.6.2/api/java/org/apache/spark/rdd/RDD.html }}{\fldrslt{https://spark.apache.org/docs/1.6.2/api/java/org/apache/spark/rdd/RDD.html\ul0\cf0}}}}\f0\fs24\line Resilient Distributed Dataset (RDD), the basic abstraction in Spark.\par
+{{\field{\*\fldinst{HYPERLINK http://spark.apache.org/examples.html }}{\fldrslt{http://spark.apache.org/examples.html\ul0\cf0}}}}\f0\fs24\line In the RDD API, there are two types of operations: transformations, which define a new dataset based on previous ones, and actions, which kick off a job to execute on a cluster.\par
+\line == DataFrame:\line Lecture slides 49, 53 - 58, 62 - 64.\par
+{{\field{\*\fldinst{HYPERLINK http://spark.apache.org/examples.html }}{\fldrslt{http://spark.apache.org/examples.html\ul0\cf0}}}}\f0\fs24\line On top of Spark\rquote s RDD API, high level APIs are provided, e.g. DataFrame API and Machine Learning API. These high level APIs provide a concise way to conduct certain data operations.\par
+{{\field{\*\fldinst{HYPERLINK https://databricks.com/blog/2016/07/14/a-tale-of-three-apache-spark-apis-rdds-dataframes-and-datasets.html }}{\fldrslt{https://databricks.com/blog/2016/07/14/a-tale-of-three-apache-spark-apis-rdds-dataframes-and-datasets.html\ul0\cf0}}}}\f0\fs24\line A Tale of Three Apache Spark APIs: RDDs, DataFrames, and Datasets\line When to use them and why\par
+Designed to make large data sets processing even easier, DataFrame allows developers to impose a structure onto a distributed collection of data, allowing higher-level abstraction.\par
+\line == DataSet:\line Lecture slide 50.\par
+{{\field{\*\fldinst{HYPERLINK http://spark.apache.org/docs/latest/sql-programming-guide.html#datasets-and-dataframes }}{\fldrslt{http://spark.apache.org/docs/latest/sql-programming-guide.html#datasets-and-dataframes\ul0\cf0}}}}\f0\fs24\line A Dataset is a distributed collection of data. Dataset is a new interface added in Spark 1.6 that provides the benefits of RDDs (strong typing, ability to use powerful lambda functions) with the benefits of Spark SQL\rquote s optimized execution engine. A Dataset can be constructed from JVM objects and then manipulated using functional transformations (map, flatMap, filter, etc.).\par
+A DataFrame is a Dataset organized into named columns.\par
+{{\field{\*\fldinst{HYPERLINK https://databricks.com/blog/2016/07/14/a-tale-of-three-apache-spark-apis-rdds-dataframes-and-datasets.html }}{\fldrslt{https://databricks.com/blog/2016/07/14/a-tale-of-three-apache-spark-apis-rdds-dataframes-and-datasets.html\ul0\cf0}}}}\f0\fs24\line DataFrames and Datasets... in Apache Spark 2.0, these two APIs are unified.\par
+\line == SQL on a TempTable or on Hive:\line Lecture Slides 48, 51, 53, 61\par
+The Spark documentation lumps SQL and Dataframe together:\par
+{{\field{\*\fldinst{HYPERLINK http://spark.apache.org/docs/latest/sql-programming-guide.html }}{\fldrslt{http://spark.apache.org/docs/latest/sql-programming-guide.html\ul0\cf0}}}}\f0\fs24\line Spark SQL, DataFrames and Datasets Guide\par
+One use of Spark SQL is to execute SQL queries. Spark SQL can also be used to read data from an existing Hive installation.\par
+{{\field{\*\fldinst{HYPERLINK http://spark.apache.org/sql/ }}{\fldrslt{http://spark.apache.org/sql/\ul0\cf0}}}}\f0\fs24\line Spark SQL is Apache Spark's module for working with structured data.\par
+Connect to any data source the same way.\par
+DataFrames and SQL provide a common way to access a variety of data sources, including Hive, Avro, Parquet, ORC, JSON, and JDBC. You can even join data across these sources.\par
+
+\pard\tx959\tx1918\tx2877\tx3836\tx4795\tx5754\tx6713\tx7672\tx8631\f1\fs20 context = HiveContext(sc)\par
+results = context.sql(\par
+ "SELECT * FROM people")\par
+context.jsonFile("s3n://...")\par
+ .registerTempTable("json")\par
+results = context.sql(\par
+ """SELECT * \par
+ FROM people\par
+ JOIN json ...""")\par
+
+\pard\sb100\sa100\f0\fs24\line Lecture slide 53 shows how to create a SQLContext from a SparkContext.\par
+Lecture slide 61 shows how to transform a DataFrame into a TempTable.\par
+\line == HIVE:\line Lecture slide 7, 48, 49, 51, 62, 63, 66, 68, 72, 73\par
+{{\field{\*\fldinst{HYPERLINK https://en.wikipedia.org/wiki/Apache_Hive }}{\fldrslt{https://en.wikipedia.org/wiki/Apache_Hive\ul0\cf0}}}}\f0\fs24\line Apache Hive is a data warehouse infrastructure built on top of Hadoop for providing data summarization, query, and analysis. Hive gives an SQL-like interface to query data stored in various databases and file systems that integrate with Hadoop.\par
+{{\field{\*\fldinst{HYPERLINK https://cwiki.apache.org/confluence/display/Hive/Hive+on+Spark%3A+Getting+Started }}{\fldrslt{https://cwiki.apache.org/confluence/display/Hive/Hive+on+Spark%3A+Getting+Started\ul0\cf0}}}}\f0\fs24\line Hive on Spark provides Hive with the ability to utilize Apache Spark as its execution engine.\par
+YARN Mode: {{\field{\*\fldinst{HYPERLINK http://spark.apache.org/docs/latest/running-on-yarn.html }}{\fldrslt{http://spark.apache.org/docs/latest/running-on-yarn.html\ul0\cf0}}}}\f0\fs24  \line Standalone Mode: {{\field{\*\fldinst{HYPERLINK https://spark.apache.org/docs/latest/spark-standalone.html }}{\fldrslt{https://spark.apache.org/docs/latest/spark-standalone.html\ul0\cf0}}}}\f0\fs24\par
+Hive on Spark supports Spark on YARN mode as default.\par
+\line == YARN:\line Lecture slide 10.\par
+{{\field{\*\fldinst{HYPERLINK https://hortonworks.com/apache/yarn/ }}{\fldrslt{https://hortonworks.com/apache/yarn/\ul0\cf0}}}}\f0\fs24\par
+YARN is the prerequisite for Enterprise Hadoop, providing resource management and a central platform to deliver consistent operations, security, and data governance tools across Hadoop clusters.\par
+YARN also extends the power of Hadoop to incumbent and new technologies found within the data center so that they can take advantage of cost effective, linear-scale storage and processing.\par
+\line == SQOOP:\line Lecture slides 66 - 68, 71\par
+{{\field{\*\fldinst{HYPERLINK https://spark-summit.org/2015/events/Sqoop-on-Spark-for-Data-Ingestion/ }}{\fldrslt{https://spark-summit.org/2015/events/Sqoop-on-Spark-for-Data-Ingestion/\ul0\cf0}}}}\f0\fs24\line Apache Sqoop has been used primarily for transfer of data between relational databases and HDFS, leveraging the Hadoop Mapreduce engine.\par
+\line == AVRO\line Lecture slides 69.\par
+{{\field{\*\fldinst{HYPERLINK https://en.wikipedia.org/wiki/Apache_Avro }}{\fldrslt{https://en.wikipedia.org/wiki/Apache_Avro\ul0\cf0}}}}\f0\fs24\par
+Avro is a remote procedure call and data serialization framework developed within Apache's Hadoop project. It uses JSON for defining data types and protocols, and serializes data in a compact binary format. Its primary use is in Apache Hadoop, where it can provide both a serialization format for persistent data, and a wire format for communication between Hadoop nodes, and from client programs to the Hadoop services.\par
+\line == PARQUET\line Lecture Slide 48, 63, 64, 69 - 71:\par
+"You should experiment and find out whether you should use: Avro, Parquet, RCFile (Record Columnar File) or ORC (Optimized Row Columnar) file system."\par
+{{\field{\*\fldinst{HYPERLINK https://en.wikipedia.org/wiki/Apache_Parquet }}{\fldrslt{https://en.wikipedia.org/wiki/Apache_Parquet\ul0\cf0}}}}\f0\fs24\par
+Apache Parquet is a free and open source column-oriented data store of the Apache Hadoop ecosystem. It is similar to the other columnar storage file formats available in Hadoop namely RCFile and Optimized RCFile. It is compatible with most of the data processing frameworks in the Hadoop environment.\par
+\line == IMPALA\line Lecture slide 73, 76\par
+"Hive works by compiling SQL queries into MapReduce jobs, which makes it very flexible, whereas Impala executes queries itself and is built from the ground up to be as fast as possible, which makes it better for interactive analysis."\par
+{{\field{\*\fldinst{HYPERLINK https://impala.incubator.apache.org/ }}{\fldrslt{https://impala.incubator.apache.org/\ul0\cf0}}}}\f0\fs24\line Apache Impala (incubating) is the open source, native analytic database\line for Apache Hadoop.\par
+Impala provides low latency and high concurrency for BI/analytic queries on Hadoop (not delivered by batch frameworks such as Apache Hive).\par
+
+\pard\sa200\sl276\slmult1\f2\fs22\lang9\par
+}
+ 
